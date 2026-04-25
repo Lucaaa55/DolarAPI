@@ -1,6 +1,7 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
 using Calcu.Models;
+using Calcu.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 
@@ -10,99 +11,59 @@ namespace Calcu.Controllers
     [ApiController]
     public class DolaresController : ControllerBase
     {
-        private static AngleSharp.IConfiguration config = Configuration.Default.WithDefaultLoader();
-        private string url = "https://dolarhoy.com/";
+        private static DolarService _dolarService;
+        private static BancoService _bancoService;
 
-        private IBrowsingContext context = BrowsingContext.New(config);
-
-        private string dolarPrecioCompraSelector = "div.compra div.val";
-        private string dolarPrecioVentasSelector = "div.venta-wrapper div.val";
+        public DolaresController(DolarService dolarService, BancoService bancoService)
+        {
+            _dolarService = dolarService;
+            _bancoService = bancoService;
+        }
 
         // GET: api/<DolaresController>
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            IDocument document = await context.OpenAsync(url);
+            try
+            {
+                var names = await _dolarService.GetDolarNamesAsync();
 
-            string dolarNames = "a.titleText";
-            IHtmlCollection<IElement> elements = document.QuerySelectorAll(dolarNames);
-            IEnumerable<string> names = elements.Select(element => element.TextContent);
-
-            return Ok(names);
+                return Ok(names);
+            }
+            catch (HttpRequestException e)
+            {
+                return StatusCode(503, $"Error al conectar con el sitio web: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Error al obtener los nombres de los dólares: {e.Message}");
+            }
         }
 
         [HttpGet("prices")]
         public async Task<IActionResult> Prices()
         {
-            List<Dolar> dolares = new List<Dolar>();
-
-            List<string> preciosCompra = new List<string>();
-            List<string> preciosVenta = new List<string>();
-
-            IDocument document = await context.OpenAsync(url);
-
-            string dolarNamesSelector = "a.titleText";
-            IHtmlCollection<IElement> dolarElements = document.QuerySelectorAll(dolarNamesSelector);
-            IEnumerable<string> dolarNames = dolarElements.Select(element => element.TextContent);
-
-            foreach (string name in dolarNames)
+            try
             {
-                Dolar dolar = new Dolar();
-                dolar.Name = name;
-                dolares.Add(dolar);
+                var dolares = await _dolarService.GetDolarPricesAsync();
+
+                return Ok(dolares);
             }
-
-            dolares.RemoveAt(0);
-
-            IHtmlCollection<IElement> precioCompraElements = document.QuerySelectorAll(dolarPrecioCompraSelector);
-            IHtmlCollection<IElement> precioVentaElements = document.QuerySelectorAll(dolarPrecioVentasSelector);
-
-            IEnumerable<string> dolarPreciosCompra = precioCompraElements.Select(element => element.TextContent);
-            IEnumerable<string> dolarPreciosVenta = precioVentaElements.Select(element => element.TextContent);
-
-            foreach (string dolarPrecioCompra in dolarPreciosCompra)
+            catch (HttpRequestException e)
             {
-                preciosCompra.Add(dolarPrecioCompra);
+                return StatusCode(503, $"Error al conectar con el sitio web: {e.Message}");
             }
-
-            preciosCompra.RemoveAt(0);
-
-            foreach (string dolarPrecioVenta in dolarPreciosVenta)
+            catch (Exception e)
             {
-                preciosVenta.Add(dolarPrecioVenta);
+                return StatusCode(500, $"Error al obtener los nombres de los dólares: {e.Message}");
             }
+        }
 
-            for (int i = 0; i < dolares.Count; i++)
-            {
-                string buy = "";
+        [HttpGet("bancos")]
+        public async Task<IActionResult> Bancos()
+        {
 
-                if (i > 0 && i < preciosCompra.Count)
-                {
-                    buy = preciosCompra[i].Trim('$');
-                } else
-                {
-                    buy = "0";
-                }
-
-                string sell = preciosVenta[i].Trim('$');
-                float buyFixed = float.Parse(buy);
-                float sellFixed = float.Parse(sell);
-
-                dolares[i].Buy = buyFixed;
-                dolares[i].Sell = sellFixed;
-                dolares[i].Spread = sellFixed - buyFixed;
-                dolares[i].Timestamp = Math.Abs((int)DateTimeOffset.Now.ToUnixTimeMilliseconds());
-
-                if (sellFixed != dolares[i].Sell)
-                {
-                    dolares[i].Variation = (sellFixed - dolares[i].Sell) / dolares[i].Sell * 100;
-                } else
-                {
-                    dolares[i].Variation = 0;
-                }
-            }
-
-            return Ok(dolares);
         }
     }
 }
