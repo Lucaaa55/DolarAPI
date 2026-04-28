@@ -10,8 +10,4 @@
     <PackageReference Include="AngleSharp" Version="1.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>

@@ -4,6 +4,7 @@ using Dolarium.Models;
 using Dolarium.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
+using Dolarium.DTOs;
 
 namespace Dolarium.Controllers
 {
@@ -63,9 +64,65 @@ namespace Dolarium.Controllers
         [HttpGet("bancos")]
         public async Task<IActionResult> Bancos()
         {
-            var dolaresBancos = await _bancoService.GetDolaresBancosAsync();
-            Console.WriteLine(dolaresBancos.Count);
-            return Ok(dolaresBancos);
+            try
+            {
+                var dolares = await _bancoService.GetDolaresBancosAsync();
+
+                if (!dolares.Any())
+                {
+                    return NotFound(new
+                    {
+                        error = "No se obtuvieron cotizaciones de ningún banco"
+                    });
+                }
+
+                return Ok(new
+                {
+                    timestamp = DateTime.UtcNow,
+                    cantidad = dolares.Count,
+                    cotizaciones = dolares
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Error en operación: {ex.Message}");
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (HttpRequestException e)
+            {
+                return StatusCode(503, $"Error al conectar con el sitio web: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Error al obtener los nombres de los dólares: {e.Message}");
+            }
+        }
+
+        [HttpGet("banco")]
+        public async Task<IActionResult> Banco([FromBody] BancoDto dto)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(dto.Name))
+                {
+                    return BadRequest(new { error = "El nombre del banco es requerido" });
+                }
+                
+                var dolares = await _bancoService.GetDolaresBancosAsync();
+                var dolarBanco = dolares.FirstOrDefault(d => d.Name.Equals(dto?.Name, StringComparison.OrdinalIgnoreCase));
+
+                if (dolarBanco == null)
+                {
+                    return NotFound(new { error = $"No se encontró cotización para {dto?.Name}" });
+                }
+
+                return Ok(dolarBanco);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
     }
 }
