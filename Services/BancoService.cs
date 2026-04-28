@@ -122,7 +122,7 @@ namespace Dolarium.Services
 
         private int ObtenerTimestampActual()
         {
-            return (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return (int)Math.Abs(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
         }
 
         private List<Banco> InitializeBancos()

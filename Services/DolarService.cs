@@ -82,21 +82,28 @@ namespace Dolarium.Services
             if (index >= 0 && index < prices.Count)
             {
                 var priceString = prices[index].Trim('$', ' ');
+
                 if (float.TryParse(priceString, out float result))
+                {
                     return result;
+                }
             }
             return 0f;
         }
 
         private float CalculateVariation(float current, float previous)
         {
-            if (previous == 0) return 0;
+            if (previous == 0)
+            {
+                return 0;
+            }
+
             return ((current - previous) / previous) * 100;
         }
 
         private int GetCurrentUnixTimestamp()
         {
-            return (int)DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            return (int)Math.Abs(DateTimeOffset.Now.ToUnixTimeMilliseconds());
         }
     }
 }

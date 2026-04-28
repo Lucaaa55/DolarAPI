@@ -109,11 +109,11 @@ namespace Dolarium.Controllers
                 }
                 
                 var dolares = await _bancoService.GetDolaresBancosAsync();
-                var dolarBanco = dolares.FirstOrDefault(d => d.Name.Equals(dto?.Name, StringComparison.OrdinalIgnoreCase));
+                var dolarBanco = dolares.FirstOrDefault(d => d.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase));
 
                 if (dolarBanco == null)
                 {
-                    return NotFound(new { error = $"No se encontró cotización para {dto?.Name}" });
+                    return NotFound(new { error = $"No se encontró cotización para {dto.Name}" });
                 }
 
                 return Ok(dolarBanco);
