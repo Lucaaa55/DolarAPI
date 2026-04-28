@@ -1,8 +1,8 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
-using Calcu.Models;
+using Dolarium.Models;
 
-namespace Calcu.Services
+namespace Dolarium.Services
 {
     public class DolarService
     {

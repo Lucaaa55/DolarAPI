@@ -1,4 +1,4 @@
-﻿namespace Calcu.Models
+﻿namespace Dolarium.Models
 {
     public class Dolar
     {

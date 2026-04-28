@@ -1,4 +1,4 @@
-using Calcu.Services;
+using Dolarium.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

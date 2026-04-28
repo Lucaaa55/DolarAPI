@@ -1,11 +1,11 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
-using Calcu.Models;
-using Calcu.Services;
+using Dolarium.Models;
+using Dolarium.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 
-namespace Calcu.Controllers
+namespace Dolarium.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -63,7 +63,9 @@ namespace Calcu.Controllers
         [HttpGet("bancos")]
         public async Task<IActionResult> Bancos()
         {
-
+            var dolaresBancos = await _bancoService.GetDolaresBancosAsync();
+            Console.WriteLine(dolaresBancos.Count);
+            return Ok(dolaresBancos);
         }
     }
 }
