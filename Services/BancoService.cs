@@ -63,7 +63,6 @@ namespace Dolarium.Services
             {
                 venta = compra;
             }
-                
 
             float spread = venta - compra;
 
@@ -141,14 +140,14 @@ namespace Dolarium.Services
                     Name = "Banco Provincia",
                     Short = "BPBA",
                     URL = "https://www.bancoprovincia.com.ar/mvc/productos/inversiones/dolares_bip/dolares_bip_info_gral",
-                    Selector = "div.cyvDolar_inc b > div.w3-col"
+                    Selector = "b > div.w3-col"
                 },
                 new Banco
                 {
                     Name = "Banco BBVA",
                     Short = "BBVA",
                     URL = "https://www.bbva.com.ar/personas/productos/inversiones/cotizacion-moneda-extranjera.html",
-                    Selector = "table.tabla > tbody > tr > td"
+                    Selector = "table.tabla tbody tr td"
                 }
             };
         }

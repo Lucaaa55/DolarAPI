@@ -109,7 +109,7 @@ namespace Dolarium.Controllers
                 }
                 
                 var dolares = await _bancoService.GetDolaresBancosAsync();
-                var dolarBanco = dolares.FirstOrDefault(d => d.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase));
+                var dolarBanco = dolares.FirstOrDefault(d => d.Name.Replace(" ", "").ToLower().Equals(dto.Name.Replace(" ", "").ToLower(), StringComparison.OrdinalIgnoreCase));
 
                 if (dolarBanco == null)
                 {
