@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Dolarium.Data;
 using Dolarium.Services;
 

@@ -2,9 +2,9 @@
 {
     public class Keys
     {
-        public string ApiKey { get; set; }
-        public string limit { get; set; }
-        public string used { get; set; }
-        public string createdAt { get; set; }
+        public string Id { get; set; }
+        public string Limit { get; set; }
+        public string Used { get; set; }
+        public string CreatedAt { get; set; }
     }
 }
