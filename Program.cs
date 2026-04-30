@@ -1,16 +1,17 @@
+using Dolarium.Data;
 using Dolarium.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDBContext>(options => options.UseNpgsql(connectionString));
+
 builder.Services.AddScoped<DolarService>();
 builder.Services.AddScoped<BancoService>();
 
 builder.Services.AddControllers();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 
 app.UseAuthorization();
 
