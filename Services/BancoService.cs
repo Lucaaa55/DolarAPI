@@ -9,7 +9,6 @@ namespace Dolarium.Services
     {
         private readonly IBrowsingContext _context;
         private readonly List<Banco> _bancos;
-        private const int REQUEST_TIMEOUT = 10000;
 
         public BancoService()
         {

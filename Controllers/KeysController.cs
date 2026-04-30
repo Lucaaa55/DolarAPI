@@ -25,7 +25,7 @@ namespace Dolarium.Controllers
         }
 
         // GET: api/<KeysController>
-        [HttpGet("create")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateAsync()
         {
             var key = await _keyService.CreateKeyAsync(10);
