@@ -1,8 +1,7 @@
 ﻿namespace Dolarium.DTOs
 {
-    public class BancoDto
+    public class DolaresDto
     {
         public string Key { get; set; }
-        public string Name { get; set; }
     }
 }

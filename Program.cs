@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseNpgsql(connect
 
 builder.Services.AddScoped<DolarService>();
 builder.Services.AddScoped<BancoService>();
+builder.Services.AddScoped<KeyService>();
 
 builder.Services.AddControllers();
 

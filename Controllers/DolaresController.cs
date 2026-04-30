@@ -1,10 +1,7 @@
-﻿using AngleSharp;
-using AngleSharp.Dom;
-using Dolarium.Models;
-using Dolarium.Services;
+﻿using Dolarium.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
 using Dolarium.DTOs;
+using Dolarium.Controllers;
 
 namespace Dolarium.Controllers
 {
@@ -12,14 +9,16 @@ namespace Dolarium.Controllers
     [ApiController]
     public class DolaresController : ControllerBase
     {
-        private static DolarService _dolarService;
-        private static BancoService _bancoService;
+        private readonly DolarService _dolarService;
+        private readonly BancoService _bancoService;
+        private readonly KeyService  _keyService;
 
-        public DolaresController(DolarService dolarService, BancoService bancoService)
+        public DolaresController(DolarService dolarService, BancoService bancoService, KeyService keyService)
         {
+            _keyService = keyService;
             _dolarService = dolarService;
             _bancoService = bancoService;
-        }
+        }   
 
         // GET: api/<DolaresController>
 
@@ -43,12 +42,19 @@ namespace Dolarium.Controllers
         }
 
         [HttpGet("prices")]
-        public async Task<IActionResult> Prices()
+        public async Task<IActionResult> Prices([FromBody] KeysDto dto)
         {
             try
             {
-                var dolares = await _dolarService.GetDolarPricesAsync();
+                var result = await _keyService.IsKeyValidAsync(dto.Key);
 
+                if (!result)
+                {
+                    return Unauthorized(new { error = "Clave inválida" });
+                }
+
+                await _keyService.IncrementKeyUsageAsync(dto.Key);
+                var dolares = await _dolarService.GetDolarPricesAsync();
                 return Ok(dolares);
             }
             catch (HttpRequestException e)
@@ -62,10 +68,18 @@ namespace Dolarium.Controllers
         }
 
         [HttpGet("bancos")]
-        public async Task<IActionResult> Bancos()
+        public async Task<IActionResult> Bancos([FromBody] KeysDto dto)
         {
             try
             {
+                var result = await _keyService.IsKeyValidAsync(dto.Key);
+
+                if (!result)
+                {
+                    return Unauthorized(new { error = "Clave inválida" });
+                }
+
+                await _keyService.IncrementKeyUsageAsync(dto.Key);
                 var dolares = await _bancoService.GetDolaresBancosAsync();
 
                 if (!dolares.Any())
@@ -107,7 +121,15 @@ namespace Dolarium.Controllers
                 {
                     return BadRequest(new { error = "El nombre del banco es requerido" });
                 }
-                
+
+                var result = await _keyService.IsKeyValidAsync(dto.Key);
+
+                if (!result)
+                {
+                    return Unauthorized(new { error = "Clave inválida" });
+                }
+
+                await _keyService.IncrementKeyUsageAsync(dto.Key);
                 var dolares = await _bancoService.GetDolaresBancosAsync();
                 var dolarBanco = dolares.FirstOrDefault(d => d.Name.Replace(" ", "").ToLower().Equals(dto.Name.Replace(" ", "").ToLower(), StringComparison.OrdinalIgnoreCase));
 

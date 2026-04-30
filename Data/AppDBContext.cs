@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Dolarium.Models;
 
 namespace Dolarium.Data
@@ -15,6 +16,7 @@ namespace Dolarium.Data
 
             modelBuilder.Entity<Keys>(entity =>
                 {
+                    entity.ToTable("Keys");
                     entity.HasKey(e => e.Id);
                     entity.Property(e => e.Limit).IsRequired();
                     entity.Property(e => e.Used).IsRequired();

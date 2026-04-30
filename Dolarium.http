@@ -1,5 +1,5 @@
-@Calcu_HostAddress = http://localhost:5238
+@Dolarium_HostAddress = http://localhost:5238
 
-GET {{Calcu_HostAddress}}/operations/
+GET {{Dolarium_HostAddress}}/api/dolares
 Accept: application/json
 ###
