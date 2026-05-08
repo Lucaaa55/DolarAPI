@@ -1,10 +1,11 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
+using Dolarium.Interfaces;
 using Dolarium.Models;
 
 namespace Dolarium.Services
 {
-    public class DolarService
+    public class DolarService : IDolarService
     {
         private static IBrowsingContext context;
 

@@ -1,28 +1,29 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
+using Dolarium.Interfaces;
 using Dolarium.Models;
 using System.Globalization;
 
 namespace Dolarium.Services
 {
-    public class BancoService
+    public class BancoService : IBancoService
     {
-        private readonly IBrowsingContext _context;
-        private readonly List<Banco> _bancos;
+        private readonly IBrowsingContext context;
+        private readonly List<Banco> bancos;
 
         public BancoService()
         {
             var config = Configuration.Default
                 .WithDefaultLoader();
 
-            _context = BrowsingContext.New(config);
-            _bancos = InitializeBancos();
+            context = BrowsingContext.New(config);
+            bancos = InitializeBancos();
         }
 
         public async Task<List<Dolar>> GetDolaresBancosAsync()
         {
             var dolares = new List<Dolar>();
-            var tasks = _bancos.Select(b => ExtraerDolarDelBancoAsync(b)).ToList();
+            var tasks = bancos.Select(b => ExtraerDolarDelBancoAsync(b)).ToList();
 
             try
             {
@@ -42,7 +43,7 @@ namespace Dolarium.Services
 
         private async Task<Dolar> ExtraerDolarDelBancoAsync(Banco banco)
         {
-            var documento = await _context.OpenAsync(banco.URL);
+            var documento = await context.OpenAsync(banco.URL);
             var precios = ExtraerElementos(documento, banco.Selector);
 
             if (precios.Count == 0)

@@ -18,13 +18,14 @@ namespace Dolarium.Controllers
             _keyService = keyService;
         }
 
+        // GET: api/<KeysController>
+
         [HttpGet]
         public IActionResult Get()
         {
             return Ok(new string[] { "/create", "/status", "/delete" });
         }
 
-        // GET: api/<KeysController>
         [HttpPost("create")]
         public async Task<IActionResult> CreateAsync()
         {
