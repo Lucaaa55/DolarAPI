@@ -15,25 +15,6 @@ namespace Dolarium.Controllers
         // GET: api/<DolaresController>
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            try
-            {
-                var names = await dolarService.GetDolarNamesAsync();
-
-                return Ok(names);
-            }
-            catch (HttpRequestException e)
-            {
-                return StatusCode(503, $"Error al conectar con el sitio web: {e.Message}");
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, $"Error al obtener los nombres de los dólares: {e.Message}");
-            }
-        }
-
-        [HttpGet("prices")]
         public async Task<IActionResult> Prices(/* [FromBody] KeysDto dto*/)
         {
             try

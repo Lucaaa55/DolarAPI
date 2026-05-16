@@ -23,7 +23,7 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseNpgsql(connect
 
 builder.Services.AddScoped<IDolarService, DolarService>();
 builder.Services.AddScoped<IBancoService, BancoService>();
-builder.Services.AddScoped<IndiceService>();
+builder.Services.AddScoped<IIndiceService, IndiceService>();
 builder.Services.AddScoped<KeyService>();
 
 builder.Services.AddControllers();

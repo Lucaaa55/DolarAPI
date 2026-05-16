@@ -7,7 +7,7 @@ namespace Dolarium.Services
 {
     public class DolarService : IDolarService
     {
-        private static IBrowsingContext context;
+        private readonly IBrowsingContext context;
 
         private const string URL = "https://dolarhoy.com/";
 

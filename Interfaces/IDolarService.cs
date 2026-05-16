@@ -7,8 +7,6 @@ namespace Dolarium.Interfaces
     public interface IDolarService
     {
         Task<List<string>> GetDolarNamesAsync();
-
         Task<List<Dolar>> GetDolarPricesAsync();
-        
     }
 }

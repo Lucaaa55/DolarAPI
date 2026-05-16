@@ -76,7 +76,7 @@ namespace Dolarium.Controllers
 
                 await _keyService.IncrementKeyUsageAsync(dto.Key); */
                 var dolares = await bancoService.GetDolaresBancosAsync();
-                var dolarBanco = dolares.FirstOrDefault(d => d.Name.Replace(" ", "").ToLower().Equals(dto.Name.Replace(" ", "").ToLower(), StringComparison.OrdinalIgnoreCase));
+                var dolarBanco = dolares.FirstOrDefault(d => d.Name.Replace(" ", "").ToLower().Contains(dto.Name.Replace(" ", "").ToLower(), StringComparison.OrdinalIgnoreCase));
 
                 if (dolarBanco == null)
                 {
